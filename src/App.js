@@ -21,12 +21,16 @@ function App() {
   ]);
   const [gameArr, setGameArr] = useState([]);
   const [gameScore, setGameScore] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   shuffleArray(cardArr);
+  const handleClose = () => {
+    setGameArr([]);
+    setGameScore(0);
+    setShowModal(false);
+  };
   const handleClick = (c) => {
     if (gameArr.includes(c)) {
-      setGameArr([]);
-      setGameScore(0);
-      alert("You lose");
+      setShowModal(!showModal);
     } else {
       setGameScore((prev) => prev + 1);
       setGameArr([...gameArr, c]);
@@ -34,9 +38,7 @@ function App() {
   };
   useEffect(() => {
     if (gameScore === 12) {
-      setGameArr([]);
-      setGameScore(0);
-      alert("YOU WIN");
+      setShowModal(true);
     }
   }, [gameScore]);
   return (
@@ -44,7 +46,11 @@ function App() {
       className="app"
       style={{ background: "linear-gradient(#0b571e,#578a63)" }}
     >
-      <GameLost />
+      <GameLost
+        showModal={showModal}
+        handleClose={handleClose}
+        gameScore={gameScore}
+      />
       <Header gameScore={gameScore} />
       <CardContainer cardArr={cardArr} handleClick={handleClick} />
     </div>
